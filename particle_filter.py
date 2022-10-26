@@ -146,6 +146,7 @@ class robot:
     def move(self, motion): # Do not change the name of this function
 
         # ADD CODE HERE
+        # Bicycle Model for motion. Used in cars.
         
         steer = motion[0] + random.gauss(0, self.steering_noise)
         trans = motion[1] + random.gauss(0, self.distance_noise)
