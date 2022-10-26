@@ -265,6 +265,42 @@ def resampling_wheel(p,w):
         p_.append(p[idx])
     return p_
 
+def low_variance_sampler(p,w):    
+    p_ = []
+    N = len(w)
+    w_sum = sum(w)
+    for i in range(N):
+        w[i] /= w_sum
+    r = random.uniform(0,1/N)
+    c = w[0]
+    i = 0
+    for n in range(N):
+        u = r+n/N
+        while u>c:
+            i += 1
+            c += w[i]
+        p_.append(p[i])
+    return p_
+
+def poor_sampler(p,w):
+    N = len(w)
+    w_sum = sum(w)
+    for i in range(N):
+        w[i] /= w_sum
+    cum = 0
+    w_cum = []
+    for i in range(len(w)):
+        cum += w[i]
+        w_cum.append(cum)
+    p_ = []
+    for i in range(len(p)):
+        prob = random.random()
+        idx = 0
+        while prob > w_cum[idx]:
+            idx += 1
+        p_.append(p[idx])
+    return p_
+
 def particle_filter(motions, measurements, N=500): # I know it's tempting, but don't change N!
     # --------
     #
@@ -296,7 +332,9 @@ def particle_filter(motions, measurements, N=500): # I know it's tempting, but d
             w.append(p[i].measurement_prob(measurements[t]))
 
         # resampling
-        p = resampling_wheel(p,w)
+        # p = resampling_wheel(p,w)
+        p = low_variance_sampler(p,w)
+        # p = poor_sampler(p,w)
     
     return get_position(p)
 
