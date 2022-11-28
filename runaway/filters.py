@@ -177,7 +177,7 @@ def estimate_next_pos_ekf(measurement, OTHER = None):
                 [0,0,0,0,1]])
     P = J * P * J.transpose()  
 
-    x.show()
+    # x.show()
     xy_estimate = (x.value[0][0],x.value[1][0])
     OTHER = (x,P)
 
@@ -254,8 +254,8 @@ def demo_grading(estimate_next_pos_fcn, target_bot, OTHER = None):
         position_guess, OTHER = estimate_next_pos_fcn(measurement, OTHER)
         target_bot.move_in_circle()
         true_position = (target_bot.x, target_bot.y)
-        # print 'M:', measurement, ' | G:', true_position, ' | P:', position_guess
         error = distance_between(position_guess, true_position)
+        print error
         if error <= distance_tolerance:
             print "You got it right! It took you ", ctr, " steps to localize."
             localized = True
